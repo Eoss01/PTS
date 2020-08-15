@@ -14,69 +14,59 @@
 
 @section('sidebar')
 <div class="sidebar" data-color="blue">
-      <div class="logo">
+    <div class="logo">
         <a href="/admin.admin-dashboard" class="simple-text logo-mini">
-          PTS
+            PTS
         </a>
         <a href="/admin.admin-dashboard" class="simple-text logo-normal">
-          Patient Tracking 
+            Patient Tracking
         </a>
-      </div>
-      <div class="sidebar-wrapper" id="sidebar-wrapper">
-        <ul class="nav">
-          <li class="{{ 'dashboard' == request()->path() ? 'active' : '' }}">
-            <a href="/admin.admin-dashboard">
-              <i class="now-ui-icons design_app"></i>
-              <p>Dashboard</p>
-            </a>
-          </li>
-
-          <li class="{{ 'manage-doctor' == request()->path() ? 'active' : '' }}">
-            <a href="/manage-doctor">
-              <i class="now-ui-icons users_single-02"></i>
-              <p>Manage Doctors</p>
-            </a>
-          </li>
-
-          <li class="{{ 'manage-patient' == request()->path() ? 'active' : '' }}">
-            <a href="/manage-patient">
-              <i class="now-ui-icons users_circle-08"></i>
-              <p>Manage Patients</p>
-            </a>
-          </li>
-
-          <li class="{{ 'manage-supplier' == request()->path() ? 'active' : '' }}">
-            <a href="/manage-supplier">
-              <i class="now-ui-icons business_bank"></i>
-              <p>Manage Suppliers</p>
-            </a>
-          </li>
-
-          <li class="{{ 'manage-healt-index' == request()->path() ? 'active' : '' }}">
-            <a href="/manage-health-index">
-              <i class="now-ui-icons ui-1_calendar-60"></i>
-              <p>Manage Health Index</p>
-            </a>
-          </li>
-
-          <li class="{{ 'manage-advice' == request()->path() ? 'active' : '' }}">
-            <a href="/manage-advice">
-              <i class="now-ui-icons ui-1_bell-53"></i>
-              <p>Manage Advice</p>
-            </a>
-          </li>
-
-          <li class="{{ 'user-list' == request()->path() ? 'active' : '' }}">
-            <a href="/admin.admin-user-list">
-              <i class="now-ui-icons users_single-02"></i>
-              <p>User List</p>
-            </a>
-          </li>
-        </ul>
-      </div>
     </div>
-@endsection
+    <div class="sidebar-wrapper" id="sidebar-wrapper">
+        <ul class="nav">
+            <li
+                class="{{ 'admin.admin-dashboard' == request()->path() ? 'active' : '' }}">
+                <a href="/admin.admin-dashboard">
+                    <i class="now-ui-icons design_app"></i>
+                    <p>Dashboard</p>
+                </a>
+            </li>
 
+            <li
+                class="{{ 'admin.admin-manage-doctor' == request()->path() ? 'active' : '' }}">
+                <a href="/admin.admin-manage-doctor">
+                    <i class="now-ui-icons users_single-02"></i>
+                    <p>Manage Doctors</p>
+                </a>
+            </li>
+
+            <li
+                class="{{ 'admin.admin-manage-patient' == request()->path() ? 'active' : '' }}">
+                <a href="/admin.admin-manage-patient">
+                    <i class="now-ui-icons users_circle-08"></i>
+                    <p>Manage Patients</p>
+                </a>
+            </li>
+
+            <li
+                class="{{ 'admin.admin-manage-supplier' == request()->path() ? 'active' : '' }}">
+                <a href="/admin.admin-manage-supplier">
+                    <i class="now-ui-icons business_bank"></i>
+                    <p>Manage Suppliers</p>
+                </a>
+            </li>
+
+            <li
+                class="{{ 'admin.admin-user-list' == request()->path() ? 'active' : '' }}">
+                <a href="/admin.admin-user-list">
+                    <i class="now-ui-icons users_single-02"></i>
+                    <p>User List</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+@endsection
 
 @section('content')
 <div class="content">
