@@ -16,14 +16,18 @@ use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
 
-    /*Patient Edit Personal Information Function */
+
+
+    /*Doctor Edit Personal Information Function */
     public function doctoredit(Request $request, $id)
     {
         $doctors = Doctor::findOrFail($id);
         return view('doctor.doctor-modify-personal-information')->with('doctors',$doctors);
     }
 
-    /*Patient Update Personal Information Function */
+
+
+    /*Doctor Update Personal Information Function */
     public function doctorupdate(Request $request, $id)
     {
         $doctors = Doctor::find($id);
@@ -56,6 +60,8 @@ class DashboardController extends Controller
         return redirect('doctor-modify-personal-information/'. $id)->with('status','Your Data is Updated');
     }
 
+
+
     /*Doctor List Out Personal Patient List */
     public function patientlist()
     {
@@ -68,12 +74,16 @@ class DashboardController extends Controller
         return view('doctor.doctor-manage-patient')->with('patients',$patients);
     }
 
+
+
     /*Doctor List Out Personal Patient Details */
     public function patientinformation(Request $request, $id)
     {
         $patient = Patient::findOrFail($id);
         return view('doctor.doctor-view-patient-information')->with('patient',$patient);
     }
+
+
 
     /*Doctor Create Patient Account */    
     public function patientcreate(Request $request)
@@ -120,12 +130,16 @@ class DashboardController extends Controller
 
     }
 
+
+
     /*Doctor Edit Patient Account */ 
     public function patientedit(Request $request, $id)
     {
         $patients = User::findOrFail($id);
         return view('doctor.doctor-modify-patient-information')->with('patients',$patients);
     }
+
+
 
     /*Doctor Update Patient Account */ 
     public function patientupdate(Request $request, $id)
@@ -180,6 +194,8 @@ class DashboardController extends Controller
 
     }
 
+
+
     /*Doctor List Out Personal Patient Health Index */
     public function patienthealthrecord()
     {
@@ -194,6 +210,8 @@ class DashboardController extends Controller
         return view('doctor.doctor-manage-health-index')->with('patients',$patients);
     }  
 
+
+
     /*Doctor View Personal Patient Health Index */
     public function patienthealthrecorddetails($id)
     {
@@ -206,6 +224,7 @@ class DashboardController extends Controller
     }
 
 
+
     public function doctorupdateadvice(Request $request, $id)
     {
         $advice_records = DB::table('advice_record')
@@ -215,6 +234,8 @@ class DashboardController extends Controller
         return view('doctor.doctor-modify-advice')->with('advice_records',$advice_records);
 
     }
+
+
 
     public function adviceupdate(Request $request, $id)
     {
@@ -236,5 +257,7 @@ class DashboardController extends Controller
         return redirect('doctor.doctor-manage-health-index')->with('status','Your Advice is Updated');
     }
 
+
+    
 }
     

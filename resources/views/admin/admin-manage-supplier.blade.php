@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
 @section('title')
-    User List
+Supplier List
 @endsection
 
 @section('second-index')
-    User List
+Supplier List
 @endsection
 
 @section('hidden_chart')
@@ -69,72 +69,105 @@
 @endsection
 
 @section('content')
-<div class="modal fade" id="deletemodelpop" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form id="delete_model_form" method="POST">
-        {{ csrf_field() }}
-        {{ method_field('DELETE') }}
+<div class="modal fade" id="acceptmodelpop" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="accept_model_form" method="POST">
+                {{ csrf_field() }}
+                {{ method_field('GET') }}
 
-      <div class="modal-body">
-        <input type="hidden" id="delete_user_record"/>
-        <h6>Are you sure to delete this user?</h6>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-        <button type="submit" class="btn btn-primary">Yes, delete it</button>
-      </div>
-      </form>
+                <div class="modal-body">
+                    <input type="hidden" id="accept_supplier_record" />
+                    <h6 style="text-align: center;">Are you sure to accept this supplier?</h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes, accept it</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
-  <div class="content">
+
+
+
+<div class="modal fade" id="declinemodelpop" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="decline_model_form" method="POST">
+                {{ csrf_field() }}
+                {{ method_field('GET') }}
+
+                <div class="modal-body">
+                    <input type="hidden" id="decline_supplier_record" />
+                    <h6 style="text-align: center;">Are you sure to decline this supplier?</h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes, decline it</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="content">
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <a href="/admin.admin-dashboard" class="btn btn-danger">Back</a>
-                    <a href="/admin.admin-create-user" class="btn btn-primary pull-right">Add</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table id="dataTable" class="table table-striped table-bordered">
-                          @if (session('status'))
-                          <div class="alert alert-success" role="alert">
-                              {{ session('status') }}
-                          </div>
-                          @endif
+                            @if(session('status'))
+                                <div class="alert alert-success" role="alert">
+                                    {{ session('status') }}
+                                </div>
+                            @endif
                             <thead style="text-align:center;overflow-x:auto;">
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Phone</th>
                                 <th>Email</th>
-                                <th>User Type</th>
-                                <th>Created At</th>                                
-                                <th>Updated At</th>
-                                <th>Operation</th>                                
+                                <th>Address</th>
+                                <th>Description</th>
+                                <th>Request At</th>
+                                <th>status</th>
+                                <th>Operation</th>
                             </thead>
 
                             <tbody style="text-align:center;overflow-x:auto;">
-                                @foreach ($users as $user)
-                                <tr>
-                                    <td>{{ $user->id }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->phone }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->usertype }}</td>
-                                    <td>{{ $user->created_at }}</td>
-                                    <td>{{ $user->updated_at }}</td>
-                                    <td> 
-                                        <a href="/admin-modify-user-profile/{{ $user->id }}" class="btn btn-sucess">Edit</a>
-                                        <a href="javascript:void(0)" class="btn btn-danger deletebtn">Delete</a>   
-                                    </td>
-                                </tr>
+                                @foreach($suppliers as $supplier)
+                                    <tr>
+                                        <td>{{ $supplier->supplier_id }}</td>
+                                        <td>{{ $supplier->supplier_name }}</td>
+                                        <td>{{ $supplier->supplier_phone }}</td>
+                                        <td>{{ $supplier->supplier_email }}</td>
+                                        <td>{{ $supplier->supplier_address }}</td>
+                                        <td>{{ $supplier->supplier_description }}</td>
+                                        <td>{{ $supplier->created_at }}</td>
+                                        <td>{{ $supplier->status }}</td>
+                                        <td>
+                                            <a href="javascript:void(0)" class="btn btn-sucess acceptbtn">Accept</a>
+                                            <a href="javascript:void(0)" class="btn btn-danger declinebtn">Decline</a>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -149,25 +182,40 @@
 
 @section('scripts')
 <script>
-  $(document).ready( function () {
-      $('#dataTable').DataTable();
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
 
-      $('#dataTable').on('click', '.deletebtn', function () {
+        $('#dataTable').on('click', '.acceptbtn', function () {
 
-        $tr = $(this).closest('tr');
+            $tr = $(this).closest('tr');
 
-        var data = $tr.children("td").map(function (){
-          return $(this).text();
-        }).get();
+            var data = $tr.children("td").map(function () {
+                return $(this).text();
+            }).get();
 
-        $('#delete_user_record').val(data[0]);
+            $('#accept_supplier_record').val(data[0]);
 
-        $('#delete_model_form').attr('action', '/user-delete/'+data[0]);
+            $('#accept_model_form').attr('action', '/admin-manage-supplier-status-accept/' + data[0]);
 
-        $('#deletemodelpop').modal('show');
-      });
+            $('#acceptmodelpop').modal('show');
+        });
 
-  });
+        $('#dataTable').on('click', '.declinebtn', function () {
+
+            $tr = $(this).closest('tr');
+
+            var data = $tr.children("td").map(function () {
+                return $(this).text();
+            }).get();
+
+            $('#decline_supplier_record').val(data[0]);
+
+            $('#decline_model_form').attr('action', '/admin-manage-supplier-status-decline/' + data[0]);
+
+            $('#declinemodelpop').modal('show');
+        });
+
+    });
+
 </script>
 @endsection
-

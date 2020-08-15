@@ -83,7 +83,7 @@
 
       <div class="modal-body">
         <input type="hidden" id="delete_user_record"/>
-        <h6>Are you sure to delete this user?</h6>
+        <h6 style="text-align: center;">Are you sure to delete this user?</h6>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>

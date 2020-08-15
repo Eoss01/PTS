@@ -15,12 +15,16 @@ use Illuminate\Support\Facades\Hash;
 class DashboardController extends Controller
 {
 
+
+
     /*Patient Edit Personal Information Function */
     public function patientedit(Request $request, $id)
     {
         $patients = Patient::findOrFail($id);
         return view('patient.patient-modify-personal-information')->with('patients',$patients);
     }
+
+
 
     /*Patient Update Personal Information Function */
     public function patientupdate(Request $request, $id)
@@ -66,6 +70,8 @@ class DashboardController extends Controller
         return redirect('patient-modify-personal-information/'. $id)->with('status','Your Data is Updated');
     }
 
+
+
     /*Patient List Out Personal Health Index */
     public function healthindexrecord()
     {
@@ -76,6 +82,8 @@ class DashboardController extends Controller
 
         return view('patient.patient-manage-health-index')->with('patients',$patients);
     }
+
+
 
     /*Patient Create Personal Health Index */
     public function createhealthindex(Request $request)
@@ -122,12 +130,16 @@ class DashboardController extends Controller
         }
     }
 
+
+
     /*Patient Edit Personal Health Index */    
     public function healthindexedit(Request $request, $id)
     {
         $health_index_record = Health_Index::findOrFail($id);
         return view('patient.patient-modify-health-index')->with('health_index_record',$health_index_record);
     }
+
+
 
     /*Patient Update Personal Health Index */    
     public function healthindexupdate(Request $request, $id)
@@ -161,6 +173,8 @@ class DashboardController extends Controller
 
     }
 
+
+    
     /*Patient List Out Personal Advice record */
     public function advicerecord()
     {

@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
 @section('title')
-    User List
+    Doctor List
 @endsection
 
 @section('second-index')
-    User List
+    Doctor List
 @endsection
 
 @section('hidden_chart')
@@ -83,7 +83,7 @@
 
       <div class="modal-body">
         <input type="hidden" id="delete_user_record"/>
-        <h6>Are you sure to delete this user?</h6>
+        <h6 style="text-align: center;">Are you sure to delete this doctor?</h6>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
@@ -99,7 +99,6 @@
             <div class="card">
                 <div class="card-header">
                     <a href="/admin.admin-dashboard" class="btn btn-danger">Back</a>
-                    <a href="/admin.admin-create-user" class="btn btn-primary pull-right">Add</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -114,24 +113,22 @@
                                 <th>Name</th>
                                 <th>Phone</th>
                                 <th>Email</th>
-                                <th>User Type</th>
                                 <th>Created At</th>                                
                                 <th>Updated At</th>
                                 <th>Operation</th>                                
                             </thead>
 
                             <tbody style="text-align:center;overflow-x:auto;">
-                                @foreach ($users as $user)
+                                @foreach ($doctors as $doctor)
                                 <tr>
-                                    <td>{{ $user->id }}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->phone }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->usertype }}</td>
-                                    <td>{{ $user->created_at }}</td>
-                                    <td>{{ $user->updated_at }}</td>
+                                    <td>{{ $doctor->doctor_id  }}</td>
+                                    <td>{{ $doctor->doctor_name }}</td>
+                                    <td>{{ $doctor->doctor_phone }}</td>
+                                    <td>{{ $doctor->doctor_email }}</td>
+                                    <td>{{ $doctor->created_at }}</td>
+                                    <td>{{ $doctor->updated_at }}</td>
                                     <td> 
-                                        <a href="/admin-modify-user-profile/{{ $user->id }}" class="btn btn-sucess">Edit</a>
+                                        <a href="/admin-modify-doctor-information/{{ $doctor->doctor_id  }}" class="btn btn-sucess">Edit</a>
                                         <a href="javascript:void(0)" class="btn btn-danger deletebtn">Delete</a>   
                                     </td>
                                 </tr>
@@ -162,7 +159,7 @@
 
         $('#delete_user_record').val(data[0]);
 
-        $('#delete_model_form').attr('action', '/user-delete/'+data[0]);
+        $('#delete_model_form').attr('action', '/doctor-delete/'+data[0]);
 
         $('#deletemodelpop').modal('show');
       });

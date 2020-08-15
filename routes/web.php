@@ -64,18 +64,53 @@ Route::group(['middleware' => ['auth','admin']], function () {
         return view('admin.admin-manage-supplier');
     });
 
+
+
     /*Admin Manage User Function */
     /*Admin Create User Function */
     Route::post('/user-create','Admin\DashboardController@usercreate');
     /*Admin View User List Function */
     Route::get('/admin.admin-user-list', 'Admin\DashboardController@userlist');
-    /*Admin Edit User List Function */
+    /*Admin Edit User Function */
     Route::get('/admin-modify-user-profile/{id}', 'Admin\DashboardController@useredit');
-    /*Admin Update User List Function */
+    /*Admin Update User Function */
     Route::put('/admin-modify-user-profile-update/{id}','Admin\DashboardController@userupdate');
-    /*Admin Delete User List Function */
+    /*Admin Delete User Function */
     Route::delete('/user-delete/{id}','Admin\DashboardController@userdelete');
 
+
+
+    /*Admin Manage Doctor Function */
+    /*Admin View Doctor List Function */
+    Route::get('/admin.admin-manage-doctor', 'Admin\DashboardController@doctorlist');
+    /*Admin Edit Doctor Function */
+    Route::get('/admin-modify-doctor-information/{id}', 'Admin\DashboardController@doctoredit');
+    /*Admin Update Doctor Function */
+    Route::put('/admin-modify-doctor-information-update/{id}','Admin\DashboardController@doctorupdate');
+    /*Admin Delete Doctor Function */
+    Route::delete('/doctor-delete/{id}','Admin\DashboardController@doctordelete');
+
+
+
+    /*Admin Manage Patient Function */
+    /*Admin View Patient List Function */
+    Route::get('/admin.admin-manage-patient', 'Admin\DashboardController@patientlist');
+    /*Admin Edit Patient Function */
+    Route::get('/admin-modify-patient-information/{id}', 'Admin\DashboardController@patientedit');
+    /*Admin Update Patient Function */
+    Route::put('/admin-modify-patient-information-update/{id}','Admin\DashboardController@patientupdate');
+    /*Admin Delete Patient Function */
+    Route::delete('/patient-delete/{id}','Admin\DashboardController@patientdelete');
+
+
+    
+    /*Admin Manage Supplier Function */
+    /*Admin View Supplier List Function */
+    Route::get('/admin.admin-manage-supplier', 'Admin\DashboardController@supplierlist');
+    /*Admin Accept Supplier Function */
+    Route::get('/admin-manage-supplier-status-accept/{id}','Admin\DashboardController@acceptstatus');
+    /*Admin Decline Supplier List Function */
+    Route::get('/admin-manage-supplier-status-decline/{id}','Admin\DashboardController@declinestatus');
 
 });
 

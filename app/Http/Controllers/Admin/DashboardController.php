@@ -6,10 +6,13 @@ use App\User;
 use App\Doctor;
 use App\Patient;
 use App\Supplier;
+use App\Advice;
+use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 
@@ -40,6 +43,9 @@ class DashboardController extends Controller
         $create_user->email = $request->input('email');
         $create_user->password = Hash::make($request->input('password'));
 
+        $user = Auth::user();
+        $creator_id = $user->id;
+
         if($create_user->usertype == "doctor")
         {
             $create_user->save();
@@ -65,15 +71,22 @@ class DashboardController extends Controller
             $create_patient->patient_name = $request->input('username');
             $create_patient->patient_phone = $request->input('phone');
             $create_patient->patient_email = $request->input('email');
+            $create_patient->created_by = $creator_id;
 
             $create_patient->save();
+
+            $create_advice = new Advice;
+            $create_advice->doctor_id = $creator_id;
+            $create_advice->patient_id = $patient_record;
+
+            $create_advice->save();
         }
         else
         {
             $create_user->save();
         }
 
-        return redirect('/admin.admin-user-list')->with('status','New User is Added');
+        return redirect('/admin.admin-user-list')->with('status','New user is created');
     }
 
 
@@ -167,7 +180,7 @@ class DashboardController extends Controller
         }
         
 
-        return redirect('/admin.admin-user-list')->with('status','Your Data is Updated');
+        return redirect('/admin.admin-user-list')->with('status','User data is updated');
     }
 
 
@@ -185,11 +198,200 @@ class DashboardController extends Controller
         {
             $patient = Patient::find($id);
             $patient->delete();
+
+            $advice = DB::table('advice_record')
+            ->where('patient_id', $id)
+            ->delete();
         }
 
         $users->delete();
 
-        return redirect('/admin.admin-user-list')->with('status','Your Data is Deleted');
+        return redirect('/admin.admin-user-list')->with('status','User data is deleted');
+
+    }
+
+
+
+    public function doctorlist()
+    {
+        $doctors = Doctor::all();
+        return view('admin.admin-manage-doctor')->with('doctors',$doctors);
+    }
+
+
+
+    public function doctoredit(Request $request, $id)
+    {
+        $doctors = Doctor::findOrFail($id);
+        return view('admin.admin-modify-doctor-information')->with('doctors',$doctors);
+    }
+
+
+
+    public function doctorupdate(Request $request, $id)
+    {
+        $doctors = Doctor::find($id);
+
+        $validatedData = $request->validate([
+            'username' => 'required|max:191',
+            'phone' => 'required|max:191',
+            'email' => 'required|max:191',
+            'address' => 'required',
+            'gender' => 'required',
+            'password' => 'required|min:8|max:191',
+        ]);
+
+        $doctors->doctor_name  = $request->input('username');
+        $doctors->doctor_phone = $request->input('phone');
+        $doctors->doctor_email = $request->input('email');
+        $doctors->doctor_clinic_address = $request->input('address');
+        $doctors->doctor_gender = $request->input('gender');
+        $doctors->update();
+
+        $users = User::find($id);
+
+        $users->name = $request->input('username');
+        $users->phone = $request->input('phone');
+        $users->email = $request->input('email');
+        $users->password = Hash::make($request->input('password'));
+
+        $users->update();
+        
+        return redirect('admin.admin-manage-doctor/')->with('status','Doctor data is updated');
+    }
+
+
+
+    public function doctordelete($id)
+    {
+        $users = DB::table('users')
+        ->where('id', $id)
+        ->delete();
+
+        $doctors = DB::table('doctor_record')
+        ->where('doctor_id', $id)
+        ->delete();
+
+        return redirect('admin.admin-manage-doctor/')->with('status','Doctor data is Deleted');
+
+    }
+
+
+
+    public function patientlist()
+    {
+        $patients = Patient::all();
+
+        return view('admin.admin-manage-patient')->with('patients',$patients);
+    }
+
+
+    
+    public function patientedit(Request $request, $id)
+    {
+        $patients = Patient::findOrFail($id);
+        return view('admin.admin-modify-patient-information')->with('patients',$patients);
+    }
+
+
+
+    public function patientupdate(Request $request, $id)
+    {
+        $patients = Patient::find($id);
+
+        $validatedData = $request->validate([
+        'username' => 'required|max:191',
+        'phone' => 'required|max:191',
+        'email' => 'required|max:191',
+        'address' => 'required',
+        'gender' => 'required',
+        'admission_date' => 'required',
+        'birth_date' => 'required',
+        'chronic_type' => 'required',
+        'blood_type' => 'required',
+        'medical_history' => 'required',
+        'password' => 'required|min:8|max:191',
+        ]);
+
+        $patients->patient_name = $request->input('username');
+        $patients->patient_phone = $request->input('phone');
+        $patients->patient_email = $request->input('email');
+        $patients->patient_address = $request->input('address');
+        $patients->patient_gender = $request->input('gender');
+        $patients->patient_admission_date = $request->input('admission_date');
+        $patients->patient_birth_date = $request->input('birth_date');
+        $patients->patient_chronic_type = $request->input('chronic_type');
+        $patients->patient_blood_type = $request->input('blood_type');
+        $patients->patient_medical_history = $request->input('medical_history');
+
+        $patients->update();
+
+        $users = User::find($id);
+
+        $users->name = $request->input('username');
+        $users->phone = $request->input('phone');
+        $users->email = $request->input('email');
+        $users->password = Hash::make($request->input('password'));
+
+        $users->update();
+
+        return redirect('admin.admin-manage-patient')->with('status','Patient data is edited');
+
+    }
+
+
+
+    public function patientdelete($id)
+    {
+        $users = DB::table('users')
+        ->where('id', $id)
+        ->delete();
+
+        $patient = DB::table('patient_record')
+        ->where('patient_id', $id)
+        ->delete();
+
+        $advice = DB::table('advice_record')
+        ->where('patient_id', $id)
+        ->delete();
+
+        return redirect('admin.admin-manage-patient/')->with('status','Patient data is deleted');
+
+    }
+
+
+
+    public function supplierlist()
+    {
+        $suppliers = DB::table('supplier_record')
+        ->orderBy('supplier_id','desc')
+        ->get();
+
+        return view('admin.admin-manage-supplier')->with('suppliers',$suppliers);
+
+    }   
+
+
+
+    public function acceptstatus(Request $request, $id)
+    {
+        $suppliers = Supplier::find($id);
+        $suppliers->status = "Accept";
+        $suppliers->update();
+
+        return redirect('admin.admin-manage-supplier')->with('status','The supplier data has been accepted');
+
+    }
+
+
+
+    public function declinestatus(Request $request, $id)
+    {
+        $suppliers = Supplier::find($id);
+        $suppliers->status = "Decline";
+        $suppliers->update();
+
+        return redirect('admin.admin-manage-supplier')->with('status','The supplier data has been declined');
 
     }
 
