@@ -1,0 +1,33 @@
+laravel new project_name
+
+composer require laravel/ui 
+
+php artisan ui bootstrap
+
+npm install
+
+npm run dev
+
+
+
+Database set up
+
+In app/provides/appserviceprovider.php
+
+boot add Schema::defaultStringLength(191);   &&     use Illuminate\Support\Facedes\Schema;
+
+composer require laravel/ui
+php artisan ui:auth
+php artisan ui vue --auth
+ 
+php artisan migrate everytime for manage daatabase
+
+php artisan make:middleware AdminMiddleware
+
+
+Create database table
+
+php artisan make:migration create_doctor_record_table
+php artisan make:migration create_patient_record_table
+php artisan make:migration create_supplier_record_table
+php artisan make:migration create_health_index_record_table
