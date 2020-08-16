@@ -418,4 +418,17 @@ class DashboardController extends Controller
         return redirect('/supplier-create-personal-record')->with('status','New User is Added');
     }
 
+
+
+    public function supplierstatus()
+    {
+        $suppliers = DB::table('supplier_record')
+        ->orderBy('created_at','desc')
+        ->get();
+
+        return view('admin.supplier-create-personal-record')->with('suppliers',$suppliers);
+
+    }   
+
+
 }

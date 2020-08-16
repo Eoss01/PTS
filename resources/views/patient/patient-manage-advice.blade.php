@@ -2,11 +2,11 @@
 
 
 @section('title')
-Patient Health
+Manage Advice
 @endsection
 
 @section('second-index')
-Manage Health Index
+Manage Advice
 @endsection
 
 @section('hidden_chart')
@@ -48,6 +48,15 @@ Manage Health Index
                     <p>View Advice</p>
                 </a>
             </li>
+
+            <li
+                class="{{ 'patient.patient-view-supplier-information' == request()->path() ? 'active' : '' }}">
+                <a href="/patient.patient-view-supplier-information">
+                    <i class="now-ui-icons location_map-big"></i>
+                    <p>View Supplier</p>
+                </a>
+            </li>
+
             <li
                 class="{{ 'patient-modify-personal-information' == request()->path() ? 'active' : '' }} active-pro">
                 <a href="/patient-modify-personal-information/{{ Auth::id() }}">

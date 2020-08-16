@@ -21,15 +21,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/supplier-create-personal-record', function () {
-
-    return view('admin.supplier-create-personal-record');
-
-});
 
 Route::post('/supplier-create','Admin\DashboardController@suppliercreate');
 
-
+Route::get('/supplier-create-personal-record', 'Admin\DashboardController@supplierstatus');
 
 
 /*
@@ -208,7 +203,9 @@ Route::group(['middleware' => ['auth','patient']], function () {
         return view('patient.patient-manage-advice');
     });
 
-
+    Route::get('/patient.patient-view-supplier-information', function () {
+        return view('patient.patient-view-supplier-information');
+    });
 
     /*Patient Function */
     /*Patient Edit Personal Information Function */

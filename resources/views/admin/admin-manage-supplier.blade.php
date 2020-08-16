@@ -148,7 +148,7 @@ Supplier List
                                 <th>Address</th>
                                 <th>Description</th>
                                 <th>Request At</th>
-                                <th>status</th>
+                                <th>Status</th>
                                 <th>Operation</th>
                             </thead>
 
