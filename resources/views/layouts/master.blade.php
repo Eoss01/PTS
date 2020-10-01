@@ -28,6 +28,17 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('demo/demo.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.dataTables.min.css') }}">
 
+    <style>
+        .page-item.active .page-link {
+            background-color: #f96332;
+            border-color: #f96332;
+        }
+
+        .page-link {
+            color: #f96332;
+        }
+
+    </style>
 </head>
 
 <body class="">
@@ -164,7 +175,8 @@
 
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw9wIu2vRwDZ-DAsm6X1M9utUIzFR8oBE&callback=myMap"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw9wIu2vRwDZ-DAsm6X1M9utUIzFR8oBE&callback=myMap">
+    </script>
     <!-- Chart JS -->
     <script src="{{ asset('js/plugins/chartjs.min.js') }}"></script>
     <!--  Notifications Plugin    -->

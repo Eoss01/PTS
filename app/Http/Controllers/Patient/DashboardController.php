@@ -7,10 +7,13 @@ use App\Doctor;
 use App\Patient;
 use App\Health_Index;
 use App\Advice;
+
 use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -18,19 +21,24 @@ class DashboardController extends Controller
 
 
     /*Patient Edit Personal Information Function */
-    public function patientedit(Request $request, $id)
+    public function patient_edit(Request $request, $id)
     {
-        $patients = Patient::findOrFail($id);
+        $patients = DB::table('patient_record')
+        ->where('patient_id',$id)
+        ->first();
+
         return view('patient.patient-modify-personal-information')->with('patients',$patients);
     }
 
 
 
     /*Patient Update Personal Information Function */
-    public function patientupdate(Request $request, $id)
+    public function patient_update(Request $request, $id)
     {
+        /* Find patient in patient page */
         $patients = Patient::find($id);
 
+        /* Validate input in patient page */
         $validatedData = $request->validate([
             'username' => 'required|max:191',
             'phone' => 'required|max:191',
@@ -45,6 +53,7 @@ class DashboardController extends Controller
             'password' => 'required|min:8|max:191',
         ]);
 
+        /* Get input and update it in patient page */
         $patients->patient_name  = $request->input('username');
         $patients->patient_phone = $request->input('phone');
         $patients->patient_email = $request->input('email');
@@ -55,8 +64,8 @@ class DashboardController extends Controller
         $patients->patient_chronic_type = $request->input('chronic_type');
         $patients->patient_blood_type = $request->input('blood_type');
         $patients->patient_medical_history = $request->input('medical_history');
-
         $patients->update();
+
 
         $users = User::find($id);
 
@@ -64,7 +73,6 @@ class DashboardController extends Controller
         $users->phone = $request->input('phone');
         $users->email = $request->input('email');
         $users->password = Hash::make($request->input('password'));
-
         $users->update();
         
         return redirect('patient-modify-personal-information/'. $id)->with('status','Your Data is Updated');
@@ -73,12 +81,17 @@ class DashboardController extends Controller
 
 
     /*Patient List Out Personal Health Index */
-    public function healthindexrecord()
+    public function health_index_record()
     {
         $patient = Auth::user();
         $patient_id = $patient->id;
 
-        $patients = Health_Index::select()->where('patient_id', $patient_id)->get();
+
+        $patients = DB::table('health_index_record')
+        ->where('patient_id', $patient_id)
+        ->orderBy('created_at','desc')
+        ->paginate(10);
+
 
         return view('patient.patient-manage-health-index')->with('patients',$patients);
     }
@@ -86,11 +99,12 @@ class DashboardController extends Controller
 
 
     /*Patient Create Personal Health Index */
-    public function createhealthindex(Request $request)
+    public function create_health_index(Request $request)
     {
 
         $create_health_index = new Health_Index;
 
+        /* Validate input in patient page */
         $validatedData = $request->validate([
             'blood_pressure_systolic' => 'required|numeric|between:1,200',
             'blood_pressure_diastolic' => 'required|numeric|between:1,150',
@@ -122,7 +136,6 @@ class DashboardController extends Controller
             $create_health_index->height = $request->input('height');
             $create_health_index->body_temprature = $request->input('body_temprature');
             $create_health_index->question = $request->input('question');
-
             $create_health_index->save();
 
             return redirect('/patient.patient-manage-health-index')->with('status','New health index record is Added');
@@ -133,19 +146,24 @@ class DashboardController extends Controller
 
 
     /*Patient Edit Personal Health Index */    
-    public function healthindexedit(Request $request, $id)
+    public function health_index_edit(Request $request, $id)
     {
-        $health_index_record = Health_Index::findOrFail($id);
+        $health_index_record = DB::table('health_index_record')
+        ->where('index_id', $id)
+        ->first();
+
         return view('patient.patient-modify-health-index')->with('health_index_record',$health_index_record);
     }
 
 
 
     /*Patient Update Personal Health Index */    
-    public function healthindexupdate(Request $request, $id)
+    public function health_index_update(Request $request, $id)
     {
+        /* Find health index in patient page */
         $health_index_record = Health_Index::find($id);
 
+        /* Validate input in patient page */
         $validatedData = $request->validate([
             'blood_pressure_systolic' => 'required|numeric|between:1,200',
             'blood_pressure_diastolic' => 'required|numeric|between:1,150',
@@ -157,6 +175,7 @@ class DashboardController extends Controller
             'body_temprature' => 'required|regex:/[\d]{2}.[\d]{1}/',
         ]);
 
+        /* Get input and update it in patient page */
         $health_index_record->blood_pressure_systolic = $request->input('blood_pressure_systolic');
         $health_index_record->blood_pressure_diastolic = $request->input('blood_pressure_diastolic');
         $health_index_record->fasting_blood_sugar = $request->input('fasting_blood_sugar');
@@ -166,7 +185,6 @@ class DashboardController extends Controller
         $health_index_record->height = $request->input('height');
         $health_index_record->body_temprature = $request->input('body_temprature');
         $health_index_record->question = $request->input('question');
-
         $health_index_record->update();
 
         return redirect('patient-modify-health-index/'. $id)->with('status','Your health index record is Edited');
@@ -176,12 +194,14 @@ class DashboardController extends Controller
 
     
     /*Patient List Out Personal Advice record */
-    public function advicerecord()
+    public function advice_record()
     {
         $patient = Auth::user();
         $patient_id = $patient->id;
 
-        $patients = Advice::select()->where('patient_id', $patient_id)->get();
+        $patients = Advice::select()
+        ->where('patient_id', $patient_id)
+        ->get();
 
         return view('patient.patient-manage-advice')->with('patients',$patients);
     }

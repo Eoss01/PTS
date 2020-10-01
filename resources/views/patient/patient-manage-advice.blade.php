@@ -74,65 +74,75 @@ Manage Advice
 @section('content')
 
 <div class="content">
-    <div class="row">
-
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <a href="/patient.patient-dashboard" class="btn btn-danger">Back</a>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="dataTable" class="table table-striped table-bordered">
-                            @if(session('status'))
-                                <div class="alert alert-success" role="alert">
-                                    {{ session('status') }}
-                                </div>
-                            @endif
-
-
-                            @if(session('wrong_status'))
-                                <div class="alert alert-danger" role="alert">
-                                    {{ session('wrong_status') }}
-                                </div>
-                            @endif
-
-                            <thead style="text-align:center;overflow-x:auto;">
-                                <th>Advice</th>
-                                <th>Prescription</th>
-                                <th>Appointment Date</th>
-                                <th>Appointment Time</th>
-                                <th>Updated At</th>
-                            </thead>
-
-                            <tbody style="text-align:center;overflow-x:auto;">
-                                @foreach($patients as $patient)
-                                    <tr>
-                                        <td>{{ $patient->advice }}</td>
-                                        <td>{{ $patient->prescription }}</td>
-                                        <td>{{ $patient->appointment_date }}</td>
-                                        <td>{{ $patient->appointment_time }}</td>
-                                        <td>{{ date('d-m-Y', strtotime($patient->created_at)) }}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+    @foreach($patients as $patient)
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <a href="/patient.patient-dashboard" class="btn btn-danger">Back</a>
+                        <h5 class="title">Manage Advice - Updated at {{ date('d-m-Y', strtotime($patient->updated_at)) }}</h5>
                     </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="card card-user">
-                <div>
-                    <img src="../img/Blood pressure chart.jpg">
-                    <img src="../img/Blood sugar chart.jpg">
-                    <img src="../img/Body temperature chart.jpg">
+                    @if(session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Advice:</label>
+                                    <textarea rows="4" cols="80" class="form-control"
+                                        placeholder="Please insert your medical history"
+                                        name="medical_history">{{ $patient->advice }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Prescription:</label>
+                                    <textarea rows="4" cols="80" class="form-control"
+                                        placeholder="Please insert your medical history"
+                                        name="medical_history">{{ $patient->prescription }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Appointment Date:</label>
+                                    <input type="text" name="create-at" class="form-control" placeholder="Created At"
+                                        value="{{ $patient->appointment_date }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Appointment Time:</label>
+                                    <input type="text" name="updated-at" class="form-control" placeholder="Updated At"
+                                        value="{{ $patient->appointment_time }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
+    @endforeach
+</div>
+
+<div class="col-md-4">
+    <div class="card card-user">
+        <div>
+            <img src="../img/Blood pressure chart.jpg">
+            <img src="../img/Blood sugar chart.jpg">
+            <img src="../img/Body temperature chart.jpg">
         </div>
     </div>
+</div>
+</div>
 
 </div>
 

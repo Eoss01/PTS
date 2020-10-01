@@ -141,49 +141,96 @@ Total Health Index Record
                 <div class="card-header">
                     <a href="/doctor.doctor-manage-health-index" class="btn btn-danger">Back</a>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="dataTable" class="table table-striped table-bordered">
-                            @if(session('status'))
-                                <div class="alert alert-success" role="alert">
-                                    {{ session('status') }}
-                                </div>
-                            @endif
-                            <thead style="text-align:center;overflow-x:auto;">
-                                <th>BP</th>
-                                <th>FBS</th>
-                                <th>BSAE</th>
-                                <th>HbA1c</th>
-                                <th>Weight</th>
-                                <th>Height</th>
-                                <th>Temprature</th>
-                                <th>Question</th>
-                                <th>Created At</th>
-                                <th>Operation</th>
-                            </thead>
 
-                            <tbody style="text-align:center;overflow-x:auto;">
-                                @foreach($health_index_records as $health_index_record)
-                                    <tr>
-                                        <td>{{ $health_index_record->blood_pressure_systolic }}/{{ $health_index_record->blood_pressure_diastolic }}
-                                            mmg Hg</td>
-                                        <td>{{ $health_index_record->fasting_blood_sugar }} mg/dL</td>
-                                        <td>{{ $health_index_record->blood_sugar_after_eat }} mg/dL</td>
-                                        <td>{{ $health_index_record->HbA1c }}%</td>
-                                        <td>{{ $health_index_record->weight }}kg</td>
-                                        <td>{{ $health_index_record->height }}cm</td>
-                                        <td>{{ $health_index_record->body_temprature }}°C</td>
-                                        <td>{{ $health_index_record->question }}</td>
-                                        <td>{{ date('d-m-Y', strtotime($health_index_record->created_at)) }}
-                                        </td>
-                                        <td> <a href="/doctor-modify-advice/{{ $health_index_record->patient_id }}"
-                                                class="btn btn-sucess">Add advice</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input type="search" id="accordion_search_bar" class="form-control"
+                            placeholder="Typing in the date of the record that you want to search.">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <i class="now-ui-icons ui-1_zoom-bold"></i>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                @foreach($health_index_records as $health_index_record)
+
+                                    <div class="panel panel-default"
+                                        id="collapse{{ $health_index_record->index_id }}_container">
+                                        <div class="panel-heading" role="tab"
+                                            id="heading{{ $health_index_record->index_id }}">
+
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                                    href="#collapse{{ $health_index_record->index_id }}"
+                                                    aria-expanded="false"
+                                                    aria-controls="collapse{{ $health_index_record->index_id }}">
+                                                    <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+                                                    {{ date('d-m-Y', strtotime($health_index_record->created_at)) }}
+                                                </a>
+                                            </h4>
+                                        </div>
+
+                                        <div id="collapse{{ $health_index_record->index_id }}"
+                                            class="panel-collapse collapse in" role="tabpanel"
+                                            aria-labelledby="headingOne">
+                                            <div class="panel-body">
+
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead class="text-primary"
+                                                            style="text-align:center;overflow-x:auto;">
+                                                            <th>B.Pressure</th>
+                                                            <th>Fasting</th>
+                                                            <th>After Eat</th>
+                                                            <th>HbA1c</th>
+                                                            <th>Weight</th>
+                                                            <th>Height</th>
+                                                            <th>Temprature</th>
+                                                            <th>Question</th>
+                                                            <th>Operation</th>
+                                                        </thead>
+
+                                                        <tbody style="text-align:center;overflow-x:auto;">
+                                                            <tr>
+                                                                <td>{{ $health_index_record->blood_pressure_systolic }}/{{ $health_index_record->blood_pressure_diastolic }}
+                                                                    mmg Hg</td>
+                                                                <td>{{ $health_index_record->fasting_blood_sugar }}
+                                                                    mg/dL</td>
+                                                                <td>{{ $health_index_record->blood_sugar_after_eat }}
+                                                                    mg/dL</td>
+                                                                <td>{{ $health_index_record->HbA1c }}%</td>
+                                                                <td>{{ $health_index_record->weight }}kg</td>
+                                                                <td>{{ $health_index_record->height }}cm</td>
+                                                                <td>{{ $health_index_record->body_temprature }}°C</td>
+                                                                <td>{{ $health_index_record->question }}</td>
+                                                                <td>
+                                                                    <a href="/doctor-modify-advice/{{ $health_index_record->patient_id }}"
+                                                                        class="btn btn-sucess">Add advice</a>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                @endforeach
+                            </div>
+                            <ul class="pagination">{{ $health_index_records->links() }}</ul>
+                        </div>
+                    </div>
+                    <!-- Row -->
                 </div>
             </div>
         </div>
@@ -205,9 +252,36 @@ Total Health Index Record
 
 @section('scripts')
 <script>
-    $(document).ready(function () {
-        $('#dataTable').DataTable();
-    });
+    // This section makes the search work.
+    (function () {
+        var searchTerm, panelContainerId;
+        $('#accordion_search_bar').on('change keyup', function () {
+            searchTerm = $(this).val();
+            $('#accordion > .panel').each(function () {
+                panelContainerId = '#' + $(this).attr('id');
+
+                // Makes search to be case insesitive 
+                $.extend($.expr[':'], {
+                    'contains': function (elem, i, match, array) {
+                        return (elem.textContent || elem.innerText || '').toLowerCase()
+                            .indexOf((match[3] || "").toLowerCase()) >= 0;
+                    }
+                });
+
+                // END Makes search to be case insesitive
+
+                // Show and Hide Triggers
+                $(panelContainerId + ':not(:contains(' + searchTerm + '))')
+                    .hide(); //Hide the rows that done contain the search query.
+                $(panelContainerId + ':contains(' + searchTerm + ')')
+                    .show(); //Show the rows that do!
+
+            });
+        });
+    }());
+    // End Show and Hide Triggers
+
+    // END This section makes the search work.
 
 </script>
 @endsection

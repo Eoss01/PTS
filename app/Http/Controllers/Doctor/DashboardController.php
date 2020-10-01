@@ -7,10 +7,12 @@ use App\Doctor;
 use App\Patient;
 use App\Health_Index;
 use App\Advice;
+
 use Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -19,19 +21,25 @@ class DashboardController extends Controller
 
 
     /*Doctor Edit Personal Information Function */
-    public function doctoredit(Request $request, $id)
+    public function doctor_edit(Request $request, $id)
     {
-        $doctors = Doctor::findOrFail($id);
+        /* Find doctor in doctor page */
+        $doctors = DB::table('doctor_record')
+        ->where('doctor_id',$id)
+        ->first();
+        
         return view('doctor.doctor-modify-personal-information')->with('doctors',$doctors);
     }
 
 
 
     /*Doctor Update Personal Information Function */
-    public function doctorupdate(Request $request, $id)
+    public function doctor_update(Request $request, $id)
     {
+        /* Find doctor in doctor page */
         $doctors = Doctor::find($id);
 
+        /* Validate input in doctor page */
         $validatedData = $request->validate([
             'username' => 'required|max:191',
             'phone' => 'required|max:191',
@@ -41,6 +49,7 @@ class DashboardController extends Controller
             'password' => 'required|min:8|max:191',
         ]);
 
+        /* Get input in doctor page */
         $doctors->doctor_name  = $request->input('username');
         $doctors->doctor_phone = $request->input('phone');
         $doctors->doctor_email = $request->input('email');
@@ -54,7 +63,6 @@ class DashboardController extends Controller
         $users->phone = $request->input('phone');
         $users->email = $request->input('email');
         $users->password = Hash::make($request->input('password'));
-
         $users->update();
         
         return redirect('doctor-modify-personal-information/'. $id)->with('status','Your Data is Updated');
@@ -63,13 +71,15 @@ class DashboardController extends Controller
 
 
     /*Doctor List Out Personal Patient List */
-    public function patientlist()
+    public function patient_list()
     {
-        $patients = Patient::all();
         $user = Auth::user();
         $userid = $user->id;
 
-        $patients = Patient::select()->where('created_by', $userid)->get();
+        /* Find patient in doctor page */
+        $patients = DB::table('patient_record')
+        ->where('created_by', $userid)
+        ->get();
 
         return view('doctor.doctor-manage-patient')->with('patients',$patients);
     }
@@ -77,19 +87,24 @@ class DashboardController extends Controller
 
 
     /*Doctor List Out Personal Patient Details */
-    public function patientinformation(Request $request, $id)
+    public function patient_information(Request $request, $id)
     {
-        $patient = Patient::findOrFail($id);
+        /* Find patient in doctor page */
+        $patient = DB::table('patient_record')
+        ->where('patient_id',$id)
+        ->first();
+
         return view('doctor.doctor-view-patient-information')->with('patient',$patient);
     }
 
 
 
     /*Doctor Create Patient Account */    
-    public function patientcreate(Request $request)
+    public function patient_create(Request $request)
     {
         $create_user = new User;
         
+        /* Validate input in doctor page */
         $validatedData = $request->validate([
             'username' => 'required|max:191',
             'phone' => 'required|max:191',
@@ -97,32 +112,32 @@ class DashboardController extends Controller
             'password' => 'required|min:8|max:191',
         ]);
 
+        /* Get input and create patient user in doctor page */
         $create_user->name = $request->input('username');
         $create_user->phone = $request->input('phone');
         $create_user->usertype = $request->input('usertype');
         $create_user->email = $request->input('email');
         $create_user->password = Hash::make($request->input('password'));
-
         $create_user->save();
+
 
         $patient_record = $create_user->id;
         $user = Auth::user();
         $doctor_id = $user->id;
 
-
+        /* Get input and create patient record in doctor page */
         $create_patient = new Patient;
         $create_patient->patient_id = $patient_record;
         $create_patient->patient_name = $request->input('username');
         $create_patient->patient_phone = $request->input('phone');
         $create_patient->patient_email = $request->input('email');
         $create_patient->created_by = $request->input('created_by');
-
         $create_patient->save();
 
+        /* Get input and create patient advice in doctor page */
         $create_advice = new Advice;
         $create_advice->doctor_id = $doctor_id;
         $create_advice->patient_id = $patient_record;
-
         $create_advice->save();
 
 
@@ -133,19 +148,25 @@ class DashboardController extends Controller
 
 
     /*Doctor Edit Patient Account */ 
-    public function patientedit(Request $request, $id)
+    public function patient_edit(Request $request, $id)
     {
-        $patients = User::findOrFail($id);
+        /* Find patient user record in doctor page */
+        $patients = DB::table('users')
+        ->where('id',$id)
+        ->first();
+
         return view('doctor.doctor-modify-patient-information')->with('patients',$patients);
     }
 
 
 
     /*Doctor Update Patient Account */ 
-    public function patientupdate(Request $request, $id)
+    public function patient_update(Request $request, $id)
     {
+        /* Find patient user record in doctor page */
         $users = User::findOrFail($id);
 
+        /* Validate input in doctor page */
         $validatedData = $request->validate([
             'username' => 'required|max:191',
             'phone' => 'required|max:191',
@@ -153,20 +174,20 @@ class DashboardController extends Controller
             'password' => 'required|min:8|max:191',
         ]);
 
+        /* Get input in doctor page */
         $users->name = $request->input('username');
         $users->phone = $request->input('phone');
         $users->usertype = $request->input('usertype');
         $users->email = $request->input('email');
         $users->password = Hash::make($request->input('password'));
-
         $users->update();
 
+        /* Find patient user record in doctor page */
         $patient = Patient::find($id);
 
         $patient->patient_name  = $request->input('username');
         $patient->patient_phone = $request->input('phone');
         $patient->patient_email = $request->input('email');
-
         $patient->update();
 
         return redirect('doctor-modify-patient-information/'. $id)->with('status','Your Patient Information is Edited');
@@ -176,7 +197,7 @@ class DashboardController extends Controller
 
 
     /*Doctor Delete Patient Account */ 
-    public function patientdelete($id)
+    public function patient_delete($id)
     {
         $users = DB::table('users')
         ->where('id', $id)
@@ -197,7 +218,7 @@ class DashboardController extends Controller
 
 
     /*Doctor List Out Personal Patient Health Index */
-    public function patienthealthrecord()
+    public function patient_health_record()
     {
         $user = Auth::user();
         $userid = $user->id;
@@ -213,19 +234,20 @@ class DashboardController extends Controller
 
 
     /*Doctor View Personal Patient Health Index */
-    public function patienthealthrecorddetails($id)
+    public function patient_health_record_details($id)
     {
         $health_index_records = DB::table('health_index_record')
         ->where('patient_id', $id)
         ->orderBy('created_at','desc')
-        ->get();
+        ->paginate(10);
+
 
         return view('doctor.doctor-view-patient-health-index')->with('health_index_records',$health_index_records);
     }
 
 
-
-    public function doctorupdateadvice(Request $request, $id)
+    /*Doctor Get Personal Patient Advice */
+    public function doctor_update_advice(Request $request, $id)
     {
         $advice_records = DB::table('advice_record')
         ->where('patient_id', $id)
@@ -236,8 +258,8 @@ class DashboardController extends Controller
     }
 
 
-
-    public function adviceupdate(Request $request, $id)
+    /*Doctor Update Personal Patient Advice */
+    public function advice_update(Request $request, $id)
     {
         $advice_records = Advice::find($id);
 
@@ -256,7 +278,6 @@ class DashboardController extends Controller
 
         return redirect('doctor.doctor-manage-health-index')->with('status','Your Advice is Updated');
     }
-
 
     
 }
